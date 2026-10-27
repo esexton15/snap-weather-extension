@@ -6,20 +6,19 @@
 
     // Command: get temperature
     SnapExtensions.primitives.set(
-        'wth_gettemperature()',
-        function () {
+        'wth_gettemperature(latitude,longitude)',
+        function (latitude,longitude) {
             // Avoid starting duplicate requests.
             if (loading) return;
 
             loading = true;
             error = null;
 
-            const url =
-                'https://api.open-meteo.com/v1/forecast' +
-                '?latitude=39.4667' +
-                '&longitude=-87.4139' +
-                '&current=temperature_2m' +
-                '&temperature_unit=fahrenheit';
+            const url = new URL("https://api.open-meteo.com/v1/forecast")
+            url.searchParams.set('latitude', encodeURIComponent(latitude));
+            url.searchParams.set('longitude', encodeURIComponent(longitude));
+            url.searchParams.set('current', 'temperature_2m');
+            url.searchParams.set('temperature_unit', 'fahrenheit');
 
             fetch(url)
                 .then(response => {
